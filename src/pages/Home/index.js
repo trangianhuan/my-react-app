@@ -1,33 +1,27 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Student from '../../components/Student';
+import axios from 'axios';
 
 class Home extends Component {
-    // const eleCourses = items.map((item,index) =>
-    //   <Course key = {index} name={item.name} time={item.time} free={item.free} desc={item.desc}></Course>
-    // );
+    constructor(){
+      super();
+      this.state = {
+        students:[]
+      }
+    }
+
+    componentDidMount() {
+      axios.get(`http://laravel54.local.com/api/students`).then(res => {
+        this.setState({
+          students : res.data,
+        })
+      }).catch(err => {
+        console.log(err.response)
+      });
+    }
 
     render() {
-        const students =[
-          {
-            name: 'Toan',
-            age: '22',
-            email: 'toan@gmail.com'
-          },
-          {
-            name: 'Nguyên',
-            age: '23',
-            email: 'nguyen@gmail.com'
-          },
-          {
-            name: 'Vân',
-            age: '21',
-            email: 'van@gmail.com'
-          }
-        ];
-        const studentList = students.map((item,index) =>
-          <Student key = {index} name={item.name} age={item.age} email={item.email} ></Student>
-        );
         return(
             <div className="container-fluid text-center">
               <div className="row content">
@@ -43,7 +37,9 @@ class Home extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                        {studentList}
+                        {this.state.students.map((item,index) =>
+          <Student key = {index} id={item.id} name={item.name} age={item.age} email={item.email} ></Student>
+        )}
                     </tbody>
                   </table>
 
